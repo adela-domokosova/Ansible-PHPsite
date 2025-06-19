@@ -1,0 +1,3 @@
+- name: Install Nginx a PHP-FPM
+  apt:
+    cmd: nginx
