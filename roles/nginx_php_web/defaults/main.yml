@@ -1,9 +1,9 @@
 nginx_package_name: nginx
 php_fpm_package_name: php8.1-fpm
 php_common_packages:
-  - php-cli
-  - php-gd
-  - php-mbstring
-  - php-xml
-  - php-zip
-  - php-curl
+  - php8.1-cli
+    - php8.1-gd  
+    - php8.1-mbstring
+    - php8.1-xml 
+    - php8.1-zip
+    - php8.1-curl
