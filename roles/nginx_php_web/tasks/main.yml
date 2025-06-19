@@ -8,10 +8,7 @@
 
 - name: Install Nginx a PHP-FPM
   package:
-    name:
-      - "{{ nginx_package_name }}"
-      - "{{ php_fpm_package_name }}"
-      - "{{ php_common_packages }}"
+    name: "{{ all_required_packages }}"
     state: present
   notify: restart nginx
 
