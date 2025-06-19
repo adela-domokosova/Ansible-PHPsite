@@ -1,3 +1,4 @@
 web_root_dir: /var/www/mywebapp
 nginx_port: 80
 php_app_filename: index.php
+ssh_user: user
