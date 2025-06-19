@@ -1,0 +1,11 @@
+nginx_package_name: nginx
+php_fpm_package_name: php8.1-fpm
+all_required_packages:
+  - nginx
+  - php8.1-fpm
+  - php8.1-cli
+  - php8.1-gd
+  - php8.1-mbstring
+  - php8.1-xml
+  - php8.1-zip
+  - php8.1-curl

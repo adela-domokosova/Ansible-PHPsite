@@ -1,9 +1,14 @@
+- name: Create web root directory
+  file:
+    path: "{{ web_root_dir }}"
+    state: directory
+    owner: www-data
+    group: www-data
+    mode: '0755'
+
 - name: Install Nginx a PHP-FPM
-  apt:
-    name:
-      - "{{ nginx_package_name }}"
-      - "{{ php_fpm_package_name }}"
-      - "{{ php_common_packages }}"
+  package:
+    name: "{{ all_required_packages }}"
     state: present
   notify: restart nginx
 
@@ -17,22 +22,29 @@
 
 - name: Copy the web page
   copy:
-    source: "{{ playbook_dir }}/roles/nginx_php_web/files/{{ php_app_filename }}"
-    destination: "{{ web_root_dir }}/{{ php_app_filename }}"
+    src: "{{ playbook_dir }}/roles/nginx_php_web/files/{{ php_app_filename }}"
+    dest: "{{ web_root_dir }}/{{ php_app_filename }}"
     owner: www-data
     group: www-data
     mode: '0644'
 
 - name: Copy nginx config file
   template:
-    source: "{{ playbook_dir }}/roles/nginx_php_web/templates/nginx_php_site.conf.j2"
-    destination: "/etc/nginx/sites-available/{{ ansible_facts.hostname }}.conf"
+    src: "{{ playbook_dir }}/roles/nginx_php_web/templates/nginx_php_site.conf.j2"
+    dest: "/etc/nginx/sites-available/{{ ansible_hostname }}.conf"
     mode: '0644'
+
+
+- name: Enable new nginx site
+  file:
+    src: "/etc/nginx/sites-available/{{ ansible_hostname }}.conf"
+    dest: "/etc/nginx/sites-enabled/{{ ansible_hostname }}.conf"
+    state: link
   notify: restart nginx
 
 - name: Remove default nginx site
   file:
-    path: /etc/nginx/site-enabled/default
+    path: /etc/nginx/sites-enabled/default
     state: absent
   notify: restart nginx
   ignore_errors: yes
