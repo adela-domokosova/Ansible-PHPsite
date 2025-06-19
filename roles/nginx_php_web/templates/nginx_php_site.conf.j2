@@ -1,6 +1,6 @@
 server {
     listen {{ nginx_port }};
-    server_name {{ ansible_default_ipv4.address }} {{ ansible_facts.hostname }}; # Použijeme IP i hostname
+    server_name {{ ansible_default_ipv4.address }} {{ ansible_hosname }}; # Použijeme IP i hostname
 
     root {{ web_root_dir }};
     index index.php index.html index.htm;
@@ -24,6 +24,6 @@ server {
         deny all;
     }
 
-    error_log /var/log/nginx/{{ ansible_facts.hostname }}_error.log;
-    access_log /var/log/nginx/{{ ansible_facts.hostname }}_access.log;
+    error_log /var/log/nginx/{{ ansible_hostname }}_error.log;
+    access_log /var/log/nginx/{{ ansible_hostname }}_access.log;
 }

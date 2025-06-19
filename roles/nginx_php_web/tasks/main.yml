@@ -26,14 +26,14 @@
 - name: Copy nginx config file
   template:
     src: "{{ playbook_dir }}/roles/nginx_php_web/templates/nginx_php_site.conf.j2"
-    dest: "/etc/nginx/sites-available/{{ ansible_facts.hostname }}.conf"
+    dest: "/etc/nginx/sites-available/{{ ansible_hostname }}.conf"
     mode: '0644'
   notify: restart nginx
 
 - name: Enable new nginx site
   file:
-    src: "/etc/nginx/sites-available/{{ ansible_facts.hostname }}.conf"
-    dest: "/etc/nginx/sites-enabled/{{ ansible_facts.hostname }}.conf"
+    src: "/etc/nginx/sites-available/{{ ansible_hostname }}.conf"
+    dest: "/etc/nginx/sites-enabled/{{ ansible_hostname }}.conf"
     state: link
   notify: restart nginx
 
