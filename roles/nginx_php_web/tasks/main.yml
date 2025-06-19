@@ -3,7 +3,7 @@
     name:
       - "{{ nginx_package_name }}"
       - "{{ php_fpm_package_name }}"
-      - "{{ php_common_packages }}"
+      #- "{{ php_common_packages }}"
     state: present
   notify: restart nginx
 
