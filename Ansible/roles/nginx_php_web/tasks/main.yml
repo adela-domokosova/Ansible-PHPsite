@@ -1,0 +1,73 @@
+- name: Create web root directory
+  file:
+    path: "{{ web_root_dir }}"
+    state: directory
+    owner: www-data
+    group: www-data
+    mode: '0755'
+
+- name: Install Nginx a PHP-FPM
+  package:
+    name: "{{ all_required_packages }}"
+    state: present
+  notify: restart nginx
+
+- name: Root web directory
+  file:
+    path: "{{ web_root_dir }}"
+    state: directory
+    owner: www-data
+    group: www-data
+    mode: '0755'
+
+- name: Copy the web page
+  copy:
+    src: "{{ playbook_dir }}/roles/nginx_php_web/files/{{ php_app_filename }}"
+    dest: "{{ web_root_dir }}/{{ php_app_filename }}"
+    owner: www-data
+    group: www-data
+    mode: '0644'
+
+- name: Copy nginx config file
+  template:
+    src: "{{ playbook_dir }}/roles/nginx_php_web/templates/nginx_php_site.conf.j2"
+    dest: "/etc/nginx/sites-available/{{ ansible_hostname }}.conf"
+    mode: '0644'
+
+
+- name: Enable new nginx site
+  file:
+    src: "/etc/nginx/sites-available/{{ ansible_hostname }}.conf"
+    dest: "/etc/nginx/sites-enabled/{{ ansible_hostname }}.conf"
+    state: link
+  notify: restart nginx
+
+- name: Remove default nginx site
+  file:
+    path: /etc/nginx/sites-enabled/default
+    state: absent
+  notify: restart nginx
+  ignore_errors: yes
+
+- name: Check service PHP FPM
+  service:
+    name: "{{ php_fpm_package_name }}"
+    state: started
+    enabled: yes
+
+- name: Check service Nginx
+  service:
+    name: "{{ nginx_package_name }}"
+    state: started
+    enabled: yes
+
+- name: Check page availability
+  uri:
+    url: "http://{{ ansible_default_ipv4.address }}"
+    status_code: 200
+  register: response
+
+- name: Response result
+  debug:
+    msg: "Web is available, with code 200"
+  when: response.status == 200

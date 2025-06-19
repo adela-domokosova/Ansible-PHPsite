@@ -1,0 +1,16 @@
+- name: Primary playbook
+  hosts: web_server
+  become: yes
+  gather_facts: yes
+
+  pre_tasks:
+    - name: Update apt cache
+      apt:
+        update_cache: yes
+     
+    - name: Zobrazení IP adresy pro přístup k webu
+      ansible.builtin.debug:
+        msg: "Webserver by měl být dostupný na: http://{{ ansible_default_ipv4.address }}"
+
+  roles:
+    - role: nginx_php_web
