@@ -1,9 +1,17 @@
+- name: Create web root directory
+  file:
+    path: "{{ web_root_dir }}"
+    state: directory
+    owner: www-data
+    group: www-data
+    mode: '0755'
+
 - name: Install Nginx a PHP-FPM
   package:
     name:
       - "{{ nginx_package_name }}"
       - "{{ php_fpm_package_name }}"
-      #- "{{ php_common_packages }}"
+      - "{{ php_common_packages }}"
     state: present
   notify: restart nginx
 
@@ -28,7 +36,7 @@
     src: "{{ playbook_dir }}/roles/nginx_php_web/templates/nginx_php_site.conf.j2"
     dest: "/etc/nginx/sites-available/{{ ansible_hostname }}.conf"
     mode: '0644'
-  notify: restart nginx
+
 
 - name: Enable new nginx site
   file:
@@ -39,7 +47,7 @@
 
 - name: Remove default nginx site
   file:
-    path: /etc/nginx/site-enabled/default
+    path: /etc/nginx/sites-enabled/default
     state: absent
   notify: restart nginx
   ignore_errors: yes
