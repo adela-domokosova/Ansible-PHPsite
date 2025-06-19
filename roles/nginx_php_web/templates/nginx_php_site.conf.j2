@@ -13,7 +13,7 @@ server {
     location ~ \.php$ {
         include snippets/fastcgi-php.conf;
         # With php-fpm (or other unix sockets):
-        fastcgi_pass unix:/var/run/php/php{{ ansible_facts.php_version.major_version }}.0-fpm.sock; # Dynamická cesta k PHP-FPM socketu
+        fastcgi_pass unix:/var/run/php/php{{ php_major_version }}-fpm.sock; # Dynamická cesta k PHP-FPM socketu
         # With php-fpm (or other tcp sockets):
         # fastcgi_pass 127.0.0.1:9000;
     }

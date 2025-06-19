@@ -17,17 +17,24 @@
 
 - name: Copy the web page
   copy:
-    source: "{{ playbook_dir }}/roles/nginx_php_web/files/{{ php_app_filename }}"
-    destination: "{{ web_root_dir }}/{{ php_app_filename }}"
+    src: "{{ playbook_dir }}/roles/nginx_php_web/files/{{ php_app_filename }}"
+    dest: "{{ web_root_dir }}/{{ php_app_filename }}"
     owner: www-data
     group: www-data
     mode: '0644'
 
 - name: Copy nginx config file
   template:
-    source: "{{ playbook_dir }}/roles/nginx_php_web/templates/nginx_php_site.conf.j2"
-    destination: "/etc/nginx/sites-available/{{ ansible_facts.hostname }}.conf"
+    src: "{{ playbook_dir }}/roles/nginx_php_web/templates/nginx_php_site.conf.j2"
+    dest: "/etc/nginx/sites-available/{{ ansible_facts.hostname }}.conf"
     mode: '0644'
+  notify: restart nginx
+
+- name: Enable new nginx site
+  file:
+    src: "/etc/nginx/sites-available/{{ ansible_facts.hostname }}.conf"
+    dest: "/etc/nginx/sites-enabled/{{ ansible_facts.hostname }}.conf"
+    state: link
   notify: restart nginx
 
 - name: Remove default nginx site
