@@ -1,5 +1,5 @@
 - name: Install Nginx a PHP-FPM
-  apt:
+  package:
     name:
       - "{{ nginx_package_name }}"
       - "{{ php_fpm_package_name }}"

@@ -1,5 +1,5 @@
 nginx_package_name: nginx
-php_fpm_package_name: php8.2-fpm
+php_fpm_package_name: php8.1-fpm
 php_common_packages:
   - php-cli
   - php-gd
