@@ -1,0 +1,29 @@
+server {
+    listen {{ nginx_port }};
+    server_name {{ ansible_default_ipv4.address }} {{ ansible_hostname }}; # Použijeme IP i hostname
+
+    root {{ web_root_dir }};
+    index index.php index.html index.htm;
+
+    location / {
+        try_files $uri $uri/ /{{ php_app_filename }}?$query_string;
+    }
+
+    # Pass PHP scripts to PHP-FPM
+    location ~ \.php$ {
+        include snippets/fastcgi-php.conf;
+        # With php-fpm (or other unix sockets):
+        fastcgi_pass unix:/var/run/php/php{{ php_major_version }}-fpm.sock; # Dynamická cesta k PHP-FPM socketu
+        # With php-fpm (or other tcp sockets):
+        # fastcgi_pass 127.0.0.1:9000;
+    }
+
+    # deny access to .htaccess files, if Apache's document root
+    # concurs with nginx's one
+    location ~ /\.ht {
+        deny all;
+    }
+
+    error_log /var/log/nginx/{{ ansible_hostname }}_error.log;
+    access_log /var/log/nginx/{{ ansible_hostname }}_access.log;
+}
