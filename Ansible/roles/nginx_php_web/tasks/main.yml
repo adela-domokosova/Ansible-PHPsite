@@ -6,6 +6,22 @@
     group: www-data
     mode: '0755'
 
+- name: Ensure required dependencies for add-apt-repository
+  apt:
+    name: software-properties-common
+    state: present
+    update_cache: yes
+
+- name: Add PHP 8.1 PPA repository
+  apt_repository:
+    repo: ppa:ondrej/php
+    state: present
+    update_cache: yes
+
+- name: Update apt cache
+  apt:
+    update_cache: yes
+
 - name: Install Nginx a PHP-FPM
   package:
     name: "{{ all_required_packages }}"
